@@ -2,7 +2,7 @@ import { Repository } from '../types/repository';
 
 const GITHUB_API_BASE = 'https://api.github.com';
 const USERS_PER_PAGE = 50;
-const MAX_USER_PAGES = 5;
+const MAX_USER_PAGES = 20;
 const REPOS_PER_USER = 5;
 
 export class GitHubError extends Error {
