@@ -73,7 +73,7 @@ const RepositoryList = ({ sortBy }: RepositoryListProps) => {
             <LoadingSkeleton key={i} />
           ))}
         </div>
-      ) : (
+      ) : repositories.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {repositories.map((repo, index) => (
             <RepositoryCard 
@@ -82,6 +82,10 @@ const RepositoryList = ({ sortBy }: RepositoryListProps) => {
               rank={index + 1}
             />
           ))}
+        </div>
+      ) : (
+        <div className="text-center py-12 text-gray-500">
+          No repositories found
         </div>
       )}
     </div>
