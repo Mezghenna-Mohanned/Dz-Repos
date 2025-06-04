@@ -32,20 +32,12 @@ const RepositoryList = ({ sortBy }: RepositoryListProps) => {
     };
 
     loadRepositories();
-    
-    // Simulate auto-refresh every 24 hours
-    const refreshInterval = setInterval(loadRepositories, 24 * 60 * 60 * 1000);
-    
-    return () => clearInterval(refreshInterval);
   }, [sortBy]);
 
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <div className="text-red-500 text-center mb-4">
-          <svg className="w-12 h-12 mx-auto mb-2\" fill="none\" stroke="currentColor\" viewBox="0 0 24 24">
-            <path strokeLinecap="round\" strokeLinejoin="round\" strokeWidth="2\" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
           <h2 className="text-xl font-bold">Error</h2>
         </div>
         <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
@@ -63,7 +55,7 @@ const RepositoryList = ({ sortBy }: RepositoryListProps) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">
-          Top Algerian Repositories
+          Top {repositories.length} Algerian Repositories
           {sortBy === 'stars' && ' by Stars'}
           {sortBy === 'commits' && ' by Commits'}
           {sortBy === 'updated' && ' by Recent Activity'}
