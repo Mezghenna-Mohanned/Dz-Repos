@@ -1,7 +1,9 @@
 import { Repository } from '../types/repository';
 
 const GITHUB_API_BASE = 'https://api.github.com';
-const PER_PAGE = 100; // Maximum allowed by GitHub API
+const USERS_PER_PAGE = 50;
+const MAX_USER_PAGES = 5;
+const REPOS_PER_USER = 5;
 
 export class GitHubError extends Error {
   constructor(message: string, public status?: number) {
@@ -14,46 +16,51 @@ export const fetchAlgerianRepositories = async (
   sortBy: 'stars' | 'commits' | 'updated' = 'stars'
 ): Promise<Repository[]> => {
   const token = import.meta.env.VITE_GITHUB_TOKEN;
-  
+
   if (!token) {
     throw new GitHubError('GitHub token is not configured');
   }
 
   try {
-    // We'll need to make multiple requests to get all repositories
-    const pages = Math.ceil(250 / PER_PAGE);
-    let allRepositories: Repository[] = [];
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github.v3+json',
+    };
 
-    for (let page = 1; page <= pages; page++) {
-      const queryParams = new URLSearchParams({
-        q: 'location:algeria fork:false',
-        sort: sortBy === 'updated' ? 'updated' : 'stars',
-        order: 'desc',
-        per_page: PER_PAGE.toString(),
-        page: page.toString()
+    let allUsers: any[] = [];
+
+    for (let page = 1; page <= MAX_USER_PAGES; page++) {
+      const searchParams = new URLSearchParams({
+        q: 'location:algeria',
+        per_page: USERS_PER_PAGE.toString(),
+        page: page.toString(),
       });
 
-      const response = await fetch(
-        `${GITHUB_API_BASE}/search/repositories?${queryParams}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'X-GitHub-Api-Version': '2022-11-28'
-          }
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new GitHubError(
-          `GitHub API error: ${response.statusText}. ${errorData.message || ''}`,
-          response.status
-        );
-      }
+      const response = await fetch(`${GITHUB_API_BASE}/search/users?${searchParams}`, { headers });
+      if (!response.ok) break;
 
       const data = await response.json();
-      const repositories = data.items.map((item: any) => ({
+      const users = data.items || [];
+
+      if (users.length === 0) break;
+      allUsers.push(...users);
+    }
+
+    const uniqueUsers = Array.from(new Map(allUsers.map(u => [u.login, u])).values());
+
+    let allRepos: Repository[] = [];
+
+    for (const user of uniqueUsers) {
+      const reposResponse = await fetch(
+        `${GITHUB_API_BASE}/users/${user.login}/repos?per_page=${REPOS_PER_USER}&sort=updated`,
+        { headers }
+      );
+
+      if (!reposResponse.ok) continue;
+
+      const reposData = await reposResponse.json();
+
+      const mappedRepos: Repository[] = reposData.map((item: any) => ({
         id: item.id,
         name: item.name,
         full_name: item.full_name,
@@ -73,26 +80,23 @@ export const fetchAlgerianRepositories = async (
         homepage: item.homepage,
       }));
 
-      allRepositories = [...allRepositories, ...repositories];
+      allRepos.push(...mappedRepos);
+    }
 
-      // If we have enough repositories or there are no more results, break
-      if (allRepositories.length >= 250 || repositories.length < PER_PAGE) {
+    switch (sortBy) {
+      case 'stars':
+        allRepos.sort((a, b) => b.stargazers_count - a.stargazers_count);
         break;
-      }
+      case 'updated':
+        allRepos.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+        break;
+      case 'commits':
+        break;
     }
 
-    // Sort by stars if that's the criteria
-    if (sortBy === 'stars') {
-      allRepositories.sort((a, b) => b.stargazers_count - a.stargazers_count);
-    }
-
-    // Slice to ensure we only return 250 repositories
-    return allRepositories.slice(0, 250);
-  } catch (error) {
+    return allRepos.slice(0, 250);
+  } catch (error: any) {
     console.error('GitHub API Error:', error);
-    if (error instanceof GitHubError) {
-      throw error;
-    }
     throw new GitHubError(`Failed to fetch repositories: ${error.message}`);
   }
 };
