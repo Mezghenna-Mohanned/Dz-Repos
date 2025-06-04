@@ -29,14 +29,18 @@ export const fetchAlgerianRepositories = async (
         `${GITHUB_API_BASE}/search/repositories?q=location:algeria+language:javascript+language:typescript+language:python+language:java&sort=${sortBy === 'updated' ? 'updated' : 'stars'}&order=desc&per_page=${PER_PAGE}&page=${page}`,
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `token ${token}`, // Changed from Bearer to token
             'Accept': 'application/vnd.github.v3+json',
           }
         }
       );
 
       if (!response.ok) {
-        throw new GitHubError(`GitHub API error: ${response.statusText}`, response.status);
+        const errorData = await response.json().catch(() => ({}));
+        throw new GitHubError(
+          `GitHub API error: ${response.statusText}. ${errorData.message || ''}`,
+          response.status
+        );
       }
 
       const data = await response.json();
@@ -71,6 +75,7 @@ export const fetchAlgerianRepositories = async (
     // Slice to ensure we only return 250 repositories
     return allRepositories.slice(0, 250);
   } catch (error) {
+    console.error('GitHub API Error:', error);
     if (error instanceof GitHubError) {
       throw error;
     }
