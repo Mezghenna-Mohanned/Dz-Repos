@@ -20,17 +20,26 @@ export const fetchAlgerianRepositories = async (
   }
 
   try {
-    // We'll need to make multiple requests to get 250 repositories
+    // We'll need to make multiple requests to get all repositories
     const pages = Math.ceil(250 / PER_PAGE);
     let allRepositories: Repository[] = [];
 
     for (let page = 1; page <= pages; page++) {
+      const queryParams = new URLSearchParams({
+        q: 'location:algeria fork:false',
+        sort: sortBy === 'updated' ? 'updated' : 'stars',
+        order: 'desc',
+        per_page: PER_PAGE.toString(),
+        page: page.toString()
+      });
+
       const response = await fetch(
-        `${GITHUB_API_BASE}/search/repositories?q=location:algeria+language:javascript+language:typescript+language:python+language:java&sort=${sortBy === 'updated' ? 'updated' : 'stars'}&order=desc&per_page=${PER_PAGE}&page=${page}`,
+        `${GITHUB_API_BASE}/search/repositories?${queryParams}`,
         {
           headers: {
-            'Authorization': `token ${token}`, // Changed from Bearer to token
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/vnd.github.v3+json',
+            'X-GitHub-Api-Version': '2022-11-28'
           }
         }
       );
@@ -70,6 +79,11 @@ export const fetchAlgerianRepositories = async (
       if (allRepositories.length >= 250 || repositories.length < PER_PAGE) {
         break;
       }
+    }
+
+    // Sort by stars if that's the criteria
+    if (sortBy === 'stars') {
+      allRepositories.sort((a, b) => b.stargazers_count - a.stargazers_count);
     }
 
     // Slice to ensure we only return 250 repositories
