@@ -1,6 +1,6 @@
 # 🇩🇿 Algeria GitHub Stars
 
-![Demo](videos/readme.gif)
+![Demo](videos/readme.mp4)
 
 > Discover the most starred GitHub repositories by Algerian developers.  
 > A community-driven showcase of talent, open-source projects, and innovation in Algeria.
@@ -38,5 +38,5 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/algeria-github-stars.git
-cd algeria-github-stars
+git clone https://github.com/Mezghenna-Mohanned/Dz-Repos
+cd Dz-Repos
