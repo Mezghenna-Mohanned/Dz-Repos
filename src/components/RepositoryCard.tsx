@@ -16,30 +16,30 @@ const RepositoryCard = ({ repository, rank }: RepositoryCardProps) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col h-full group">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200/50 dark:border-gray-700/50 flex flex-col h-full group">
       <div className="relative">
         <div 
-          className={`absolute top-4 left-4 ${getRankColor(rank)} text-white h-8 w-8 flex items-center justify-center rounded-full font-bold shadow-sm`}
+          className={`absolute top-4 left-4 ${getRankColor(rank)} text-white h-8 w-8 flex items-center justify-center rounded-full font-bold shadow-lg z-10`}
         >
           {rank}
         </div>
         
-        <div className="h-28 bg-gradient-to-r from-blue-600 to-indigo-600 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-80"></div>
+        <div className="h-32 bg-gradient-to-br from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]"></div>
           <div className="flex items-center justify-center h-full relative z-10">
             <img 
               src={repository.owner.avatar_url} 
               alt={repository.owner.login}
-              className="h-16 w-16 rounded-full border-2 border-white shadow-md transform group-hover:scale-110 transition-transform duration-300"
+              className="h-20 w-20 rounded-full border-4 border-white/90 shadow-xl transform group-hover:scale-110 transition-transform duration-300"
             />
           </div>
         </div>
       </div>
 
-      <div className="p-5 flex-grow flex flex-col">
-        <div className="mb-3">
+      <div className="p-6 flex-grow flex flex-col">
+        <div className="mb-4">
           <div className="flex justify-between items-start gap-2">
-            <h3 className="font-bold text-lg truncate">
+            <h3 className="font-bold text-xl truncate bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 text-transparent bg-clip-text">
               {repository.name}
             </h3>
             <a 
@@ -49,7 +49,7 @@ const RepositoryCard = ({ repository, rank }: RepositoryCardProps) => {
               className="text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               aria-label="Open repository"
             >
-              <ExternalLink className="h-4 w-4" />
+              <ExternalLink className="h-5 w-5" />
             </a>
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
@@ -57,33 +57,32 @@ const RepositoryCard = ({ repository, rank }: RepositoryCardProps) => {
           </div>
         </div>
 
-        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-grow">
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 line-clamp-3 flex-grow">
           {repository.description || 'No description provided'}
         </p>
 
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="flex items-center text-sm">
-            <Star className="h-4 w-4 text-yellow-500 mr-1.5" />
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="flex items-center text-sm bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded-lg">
+            <Star className="h-4 w-4 text-yellow-500 mr-2" />
             <span className="font-medium">{formatNumber(repository.stargazers_count)}</span>
           </div>
-          <div className="flex items-center text-sm">
-            <GitFork className="h-4 w-4 text-gray-500 mr-1.5" />
+          <div className="flex items-center text-sm bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg">
+            <GitFork className="h-4 w-4 text-blue-500 mr-2" />
             <span>{formatNumber(repository.forks_count)}</span>
           </div>
-          <div className="flex items-center text-sm">
-            <Eye className="h-4 w-4 text-gray-500 mr-1.5" />
+          <div className="flex items-center text-sm bg-purple-50 dark:bg-purple-900/20 p-2 rounded-lg">
+            <Eye className="h-4 w-4 text-purple-500 mr-2" />
             <span>{formatNumber(repository.watchers)}</span>
           </div>
-          {/* Remove commits_count since it does not exist on Repository */}
         </div>
 
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-3 mt-auto">
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-auto space-y-2">
           <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
             <Clock className="h-3.5 w-3.5 mr-1.5" />
             <span>Updated {formatDate(repository.updated_at)}</span>
           </div>
           {repository.language && (
-            <div className="mt-2 flex items-center">
+            <div className="flex items-center">
               <span className={`h-3 w-3 rounded-full bg-${getLanguageColor(repository.language)}`}></span>
               <span className="ml-1.5 text-xs text-gray-600 dark:text-gray-300">{repository.language}</span>
             </div>
@@ -94,7 +93,6 @@ const RepositoryCard = ({ repository, rank }: RepositoryCardProps) => {
   );
 };
 
-// Helper function to assign colors to programming languages
 const getLanguageColor = (language: string): string => {
   const colors: Record<string, string> = {
     JavaScript: 'yellow-400',

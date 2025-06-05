@@ -13,12 +13,12 @@ const Navbar = ({ onSortChange, currentSort }: NavbarProps) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   
   return (
-    <nav className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-10 transition-colors duration-200">
+    <nav className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700 fixed top-0 left-0 right-0 z-50 transition-colors duration-200">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Github className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-            <h1 className="ml-2 text-xl font-bold">Algeria GitHub Stars</h1>
+            <h1 className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 text-transparent bg-clip-text">Algeria GitHub Stars</h1>
           </div>
           
           {/* Desktop Navigation */}
@@ -33,7 +33,7 @@ const Navbar = ({ onSortChange, currentSort }: NavbarProps) => {
               </button>
               
               {isFilterOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-gray-700">
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 z-20 border border-gray-200 dark:border-gray-700">
                   <button 
                     onClick={() => {
                       onSortChange('stars');
@@ -106,9 +106,9 @@ const Navbar = ({ onSortChange, currentSort }: NavbarProps) => {
             >
               <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                 {isMenuOpen ? (
-                  <path strokeLinecap="round\" strokeLinejoin="round\" strokeWidth="2\" d="M6 18L18 6M6 6l12 12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 ) : (
-                  <path strokeLinecap="round\" strokeLinejoin="round\" strokeWidth="2\" d="M4 6h16M4 12h16M4 18h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 )}
               </svg>
             </button>
