@@ -1,6 +1,7 @@
 import { Repository } from '../types/repository';
 
-const BACKEND_API = 'http://localhost:5000/api/top-repos';
+//pythonanywhere.com backend API URL
+const BACKEND_API = 'https://mohannedgithub.pythonanywhere.com/api/top-repos';
 
 export const fetchAlgerianRepositories = async (
   sortBy: 'stars' | 'commits' | 'updated' = 'stars'
