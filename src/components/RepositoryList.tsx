@@ -101,3 +101,5 @@ const RepositoryList = ({ sortBy, searchQuery }: RepositoryListProps) => {
     </div>
   );
 };
+
+export default RepositoryList
