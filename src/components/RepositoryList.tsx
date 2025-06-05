@@ -6,9 +6,10 @@ import LoadingSkeleton from './LoadingSkeleton';
 
 interface RepositoryListProps {
   sortBy: 'stars' | 'commits' | 'updated';
+  searchQuery: string;
 }
 
-const RepositoryList = ({ sortBy }: RepositoryListProps) => {
+const RepositoryList = ({ sortBy, searchQuery }: RepositoryListProps) => {
   const [repositories, setRepositories] = useState<Repository[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +35,15 @@ const RepositoryList = ({ sortBy }: RepositoryListProps) => {
     loadRepositories();
   }, [sortBy]);
 
+  const filteredRepositories = repositories.filter(repo => {
+    const query = searchQuery.toLowerCase();
+    return (
+      repo.name.toLowerCase().includes(query) ||
+      repo.owner.login.toLowerCase().includes(query) ||
+      (repo.description && repo.description.toLowerCase().includes(query))
+    );
+  });
+
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
@@ -55,7 +65,7 @@ const RepositoryList = ({ sortBy }: RepositoryListProps) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">
-          Top {repositories.length} Algerian Repositories
+          {searchQuery ? `Search Results (${filteredRepositories.length})` : `Top ${repositories.length} Algerian Repositories`}
           {sortBy === 'stars' && ' by Stars'}
           {sortBy === 'commits' && ' by Commits'}
           {sortBy === 'updated' && ' by Recent Activity'}
@@ -73,9 +83,9 @@ const RepositoryList = ({ sortBy }: RepositoryListProps) => {
             <LoadingSkeleton key={i} />
           ))}
         </div>
-      ) : repositories.length > 0 ? (
+      ) : filteredRepositories.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {repositories.map((repo, index) => (
+          {filteredRepositories.map((repo, index) => (
             <RepositoryCard 
               key={repo.id} 
               repository={repo} 
@@ -85,11 +95,9 @@ const RepositoryList = ({ sortBy }: RepositoryListProps) => {
         </div>
       ) : (
         <div className="text-center py-12 text-gray-500">
-          No repositories found
+          No repositories found matching your search
         </div>
       )}
     </div>
   );
 };
-
-export default RepositoryList;

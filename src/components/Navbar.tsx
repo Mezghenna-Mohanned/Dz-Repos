@@ -5,9 +5,11 @@ import { useTheme } from '../context/ThemeContext';
 interface NavbarProps {
   onSortChange: (sort: 'stars' | 'commits' | 'updated') => void;
   currentSort: string;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
 }
 
-const Navbar = ({ onSortChange, currentSort }: NavbarProps) => {
+const Navbar = ({ onSortChange, currentSort, searchQuery, onSearchChange }: NavbarProps) => {
   const { theme, toggleTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -82,7 +84,9 @@ const Navbar = ({ onSortChange, currentSort }: NavbarProps) => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input 
                   type="text" 
-                  placeholder="Search repositories..." 
+                  value={searchQuery}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  placeholder="Search repositories or owners..." 
                   className="pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all"
                 />
               </div>
@@ -106,9 +110,9 @@ const Navbar = ({ onSortChange, currentSort }: NavbarProps) => {
             >
               <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                 {isMenuOpen ? (
-                  <path strokeLinecap="round\" strokeLinejoin="round\" strokeWidth="2\" d="M6 18L18 6M6 6l12 12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 ) : (
-                  <path strokeLinecap="round\" strokeLinejoin="round\" strokeWidth="2\" d="M4 6h16M4 12h16M4 18h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 )}
               </svg>
             </button>
@@ -124,7 +128,9 @@ const Navbar = ({ onSortChange, currentSort }: NavbarProps) => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input 
                 type="text" 
-                placeholder="Search repositories..." 
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+                placeholder="Search repositories or owners..." 
                 className="pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-full w-full focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all"
               />
             </div>

@@ -12,7 +12,7 @@ const Footer = () => {
           
           <div className="text-center md:text-right">
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-              Data updates every 24 hours from the GitHub API
+              Discover the best repositories from Algerian developers
             </p>
             <div className="flex space-x-4 justify-center md:justify-end">
               <a 
@@ -36,8 +36,7 @@ const Footer = () => {
         </div>
         
         <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Algeria GitHub Stars. All rights reserved.</p>
-          <p className="mt-1">Built with React and Tailwind CSS. Powered by the GitHub API.</p>
+          <p>&copy; {new Date().getFullYear()} Algeria GitHub Stars. Made by Mezghenna Mohanned, The strongest of them all.</p>
         </div>
       </div>
     </footer>
