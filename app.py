@@ -6,6 +6,7 @@ and serve them via an API endpoint , kanet ha tkon bzf la charge 3la site withou
 #                                                long live the snake
 import requests
 from flask import Flask, jsonify
+from flask_cors import CORS
 from threading import Thread
 import time
 import os
@@ -23,6 +24,7 @@ REFRESH_INTERVAL_HOURS = 12
 CACHE_FILE = "cached_repos.json"
 
 app = Flask(__name__)
+CORS(app)
 
 cached_repos = []
 last_updated = 0
