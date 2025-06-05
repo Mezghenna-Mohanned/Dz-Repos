@@ -1,6 +1,6 @@
 # 🇩🇿 Algeria GitHub Stars
 
-![Demo](videos/readme.mp4)
+![Demo](videos/readme.gif)
 
 > Discover the most starred GitHub repositories by Algerian developers.  
 > A community-driven showcase of talent, open-source projects, and innovation in Algeria.
